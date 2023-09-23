@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Main {
 
     public static String calc(String input) {
+        String need_result;
         String[] need;
         need = input.split("[+\\-*/]");
         String a = need[0];
@@ -45,33 +46,33 @@ public class Main {
                     }
 
                 }
-                String[] rom = {"I", "IV", "V", "IX", "X", "II", "III", "VI", "VII", "VIII"};
+
+                need_result = Integer.toString(result);
+                int result2;
+                String[] rom = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
                     for (String value : rom) {
-                        if (Objects.equals(a, value) && Objects.equals(b, value)) {
-                            //need[0] = Roman_Num(need, need[0]);
-                            //need[1] = Roman_Num(need, need[1]);
-                            int result2;
+                        if (Arrays.binarySearch(rom, a) >= 0 && Arrays.binarySearch(rom, b) >= 0) {
                             if (result > 0) {
-                                if (result > 10) {
-                                    result2 = result;
-                                    result = result2 - 10;
-
-                                }
-                                else{
-
-                                }
+                                need_result = ArabicToRoman(result);
                             }
                             else{
-                                System.out.println("В римской системе нет отрицательных чисел!");
-                                throw new IllegalArgumentException();
+                                System.out.println("В римской системе нет отрациальных чисел");
+                                throw new ArithmeticException();
                             }
-
                         }
-                        else {
-                            result = result;
+                        else if (Arrays.binarySearch(rom, a) >= 0 && !Objects.equals(b, value)) {
+                            System.out.println("Используются одновременно разные системы счисления");
+                            throw new IllegalArgumentException();
+                        }
+                        else if (Arrays.binarySearch(rom, b) >= 0 && !Objects.equals(a, value)){
+                            System.out.println("Используются одновременно разные системы счисления");
+                            throw new IllegalArgumentException();
+                        }
+                        else{
+                            need_result = need_result;
                         }
                     }
-                return Integer.toString(result);
+                return need_result;
             }
         }
         catch (NumberFormatException ae) {
@@ -92,49 +93,36 @@ public class Main {
     }
 
     static String Roman_Num(String[] string1, String string) {
-        String[] rom = {"I", "IV", "V", "IX", "X", "II", "III", "VI", "VII", "VIII"};
-        for (String s : string1) {
-            for (String value : rom) {
-                if (Objects.equals(s, value)) {
-                    switch (string) {
-                        case "I":
-                            string = "1";
-                            break;
-                        case "II":
-                            string = "2";
-                            break;
-                        case "III":
-                            string = "3";
-                            break;
-                        case "IV":
-                            string = "4";
-                            break;
-                        case "V":
-                            string = "5";
-                            break;
-                        case "VI":
-                            string = "6";
-                            break;
-                        case "VII":
-                            string = "7";
-                            break;
-                        case "VIII":
-                            string = "8";
-                            break;
-                        case "IX":
-                            string = "9";
-                            break;
-                        case "X":
-                            string = "10";
-                            break;
-                    }
-                } else {
+        String[] rom = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
+        String[] number = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        for (int i = 0; i < rom.length; i++) {
+                if (Objects.equals(string, rom[i])) {
+                    string = number[i];
+                }
+                else {
                     string = string;
                 }
-            }
         }
 
         return string;
     }
 
+
+
+    static String ArabicToRoman(int num) {
+        String[] romans = {"I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M"};
+        int[] values = {1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000};
+        StringBuilder result = new StringBuilder();
+
+        for (int i = romans.length - 1; i >= 0; i--) {
+            while (num >= values[i]) {
+                result.append(romans[i]);
+                num -= values[i];
+            }
+        }
+
+        return result.toString();
+    }
+
 }
+
